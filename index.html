@@ -280,7 +280,41 @@
         function showNextButton() { if (myQuestions.length > currentQuestionIndex + 1) { nextBtn.innerText = "Próxima"; nextBtn.classList.remove('hidden'); } else { nextBtn.innerText = "Último Desafio..."; nextBtn.classList.remove('hidden'); } }
         function setupRegularQuestion(question) { optionsContainer.className = 'grid grid-cols-1 md:grid-cols-2 gap-4'; question.options.forEach(option => { const button = document.createElement('button'); button.innerText = option; button.classList.add('option-btn', 'btn', 'w-full', 'text-left', 'p-4', 'rounded-lg', 'font-semibold'); button.addEventListener('click', selectAnswer); optionsContainer.appendChild(button); }); }
         function setupAllCorrectQuestion(question) { optionsContainer.className = 'grid grid-cols-1 md:grid-cols-2 gap-4'; question.options.forEach(option => { const button = document.createElement('button'); button.innerText = option; button.classList.add('option-btn', 'btn', 'w-full', 'text-left', 'p-4', 'rounded-lg', 'font-semibold'); button.addEventListener('click', (e) => { if (option === question.answer) { score++; Array.from(optionsContainer.children).forEach(btn => { btn.classList.add('correct'); btn.disabled = true; }); showNextButton(); } else { e.target.classList.add('shake'); setTimeout(() => e.target.classList.remove('shake'), 500); } }); optionsContainer.appendChild(button); }); }
-        function setupTrickQuestion(question) { optionsContainer.className = 'flex flex-col sm:flex-row justify-center items-center gap-4 h-32 sm:h-24'; const [hisName, herName] = question.options; const hisButton = document.createElement('button'); hisButton.innerText = hisName; hisButton.classList.add('option-btn', 'btn', 'p-4', 'rounded-lg', 'font-semibold', 'w-full', 'sm:w-auto'); const herButton = document.createElement('button'); herButton.innerText = herName; herButton.classList.add('option-btn', 'btn', 'p-4', 'rounded-lg', 'font-semibold', 'w-full', 'sm:w-auto'); const dodges = [{ text: 'Opa!', scale: 0.9, padding: 'p-3' }, { text: 'Quase!', scale: 0.8, padding: 'p-2' }, { text: 'Sem chance :P', scale: 0.7, padding: 'p-1', textSize: 'text-sm' }]; herButton.addEventListener('mouseover', () => { if (dodgeAttempts < dodges.length) { const dodge = dodges[dodgeAttempts]; herButton.innerText = dodge.text; herButton.style.transform = `scale(${dodge.scale})`; herButton.classList.remove('p-4', 'p-3', 'p-2', 'p-1'); herButton.classList.add(dodge.padding); if (dodge.textSize) herButton.classList.add(dodge.textSize); dodgeAttempts++; } else { herButton.style.display = 'none'; } }); hisButton.addEventListener('click', (e) => { score++; e.target.classList.add('correct'); herButton.style.display = 'none'; hisButton.disabled = true; showNextButton(); }); optionsContainer.appendChild(hisButton); optionsContainer.appendChild(herButton); }
+        function setupTrickQuestion(question) { 
+            optionsContainer.className = 'flex flex-col sm:flex-row justify-center items-center gap-4 h-32 sm:h-24'; 
+            const [hisName, herName] = question.options; 
+            const hisButton = document.createElement('button'); 
+            hisButton.innerText = hisName; 
+            hisButton.classList.add('option-btn', 'btn', 'p-4', 'rounded-lg', 'font-semibold', 'w-full', 'sm:w-auto'); 
+            const herButton = document.createElement('button'); 
+            herButton.innerText = herName; 
+            herButton.classList.add('option-btn', 'btn', 'p-4', 'rounded-lg', 'font-semibold', 'w-full', 'sm:w-auto'); 
+            const dodges = [{ text: 'Opa!', scale: 0.9, padding: 'p-3' }, { text: 'Quase!', scale: 0.8, padding: 'p-2' }, { text: 'Sem chance :P', scale: 0.7, padding: 'p-1', textSize: 'text-sm' }]; 
+            
+            // ALTERAÇÃO AQUI: de 'mouseover' para 'click'
+            herButton.addEventListener('click', () => { 
+                if (dodgeAttempts < dodges.length) { 
+                    const dodge = dodges[dodgeAttempts]; 
+                    herButton.innerText = dodge.text; 
+                    herButton.style.transform = `scale(${dodge.scale})`; 
+                    herButton.classList.remove('p-4', 'p-3', 'p-2', 'p-1'); 
+                    herButton.classList.add(dodge.padding); 
+                    if (dodge.textSize) herButton.classList.add(dodge.textSize); 
+                    dodgeAttempts++; 
+                } else { 
+                    herButton.style.display = 'none'; 
+                } 
+            }); 
+            
+            hisButton.addEventListener('click', (e) => { 
+                score++; e.target.classList.add('correct'); 
+                herButton.style.display = 'none'; 
+                hisButton.disabled = true; 
+                showNextButton(); 
+            }); 
+            optionsContainer.appendChild(hisButton); 
+            optionsContainer.appendChild(herButton); 
+        }
 
     </script>
 </body>
